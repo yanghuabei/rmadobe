@@ -1,0 +1,38 @@
+{
+  "name": "rmadobe",
+  "version": "1.0.0",
+  "author": "hiby @yanghuabei",
+  "bin": {
+    "rmadobe": "./bin/run"
+  },
+  "bugs": "https://github.com/yanghuabei/rmadobe/issues",
+  "dependencies": {
+    "@oclif/command": "^1.5.19",
+    "@oclif/config": "^1.13.3",
+    "@oclif/plugin-help": "^2.2.1",
+    "base64-img": "^1.0.4",
+    "dayjs": "^1.8.17",
+    "shelljs": "^0.8.3"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/src"
+  ],
+  "homepage": "https://github.com/yanghuabei/rmadobe",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "oclif": {
+    "bin": "rmadobe"
+  },
+  "repository": "yanghuabei/rmadobe",
+  "scripts": {
+    "test": "echo NO TESTS"
+  }
+}
