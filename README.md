@@ -18,7 +18,11 @@ rmadobe
 ``` bash
 npm i -g rmadobe
 
-rmabobe --dir=dir
+# 处理当前目录的文件
+rmabobe
+
+# 处理指定目录的文件
+rmadobe --dir=dir
 ```
 
 <!-- usage -->

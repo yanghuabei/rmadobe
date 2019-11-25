@@ -37,8 +37,12 @@ class RmadobeCommand extends Command {
     });
 
     console.log(`Success!`);
-    fs.writeFileSync(this.logPath, JSON.stringify(this.logs, null, 4), { encoding: 'utf-8' });
-    console.log(`Check rm details here: ${this.logPath}`);
+    if (this.logs.length) {
+      fs.writeFileSync(this.logPath, JSON.stringify(this.logs, null, 4), { encoding: 'utf-8' });
+      console.log(`Check rm details here: ${this.logPath}`);
+    } else {
+      console.log('None invalid base64 image found!');
+    }
   }
 
   getFiles(searchDir) {
@@ -47,7 +51,12 @@ class RmadobeCommand extends Command {
 
   base64ToFile(imageString) {
     shell.rm(`${this.config.dataDir}/temp/*`);
-    return base64Util.imgSync(imageString, `${this.config.dataDir}/temp/`, 'temp');
+    try {
+      return base64Util.imgSync(imageString, `${this.config.dataDir}/temp/`, 'temp');
+    } catch (e) {
+      console.warn('Got invalid image string:  ', imageString);
+      console.error(e);
+    }
   }
 
   isValidImage(imageString) {
@@ -71,11 +80,15 @@ class RmadobeCommand extends Command {
           const valid = this.isValidImage(realImageString);
           if (!valid) {
             const tempFile = this.base64ToFile(fullBase64);
-            const result = shell.exec(`${PURIFY_IMAGE_CMD} ${tempFile}`);
-            if (result.code === 0) {
-              const newBase64 = base64Util.base64Sync(tempFile);
-              content = content.replace(fullBase64, newBase64);
-              this.logs.push({ file, before: fullBase64, after: newBase64 });
+            if (tempFile) {
+              const result = shell.exec(`${PURIFY_IMAGE_CMD} ${tempFile}`);
+              if (result.code === 0) {
+                const newBase64 = base64Util.base64Sync(tempFile);
+                content = content.replace(fullBase64, newBase64);
+                this.logs.push({ file, before: fullBase64, after: newBase64 });
+              }
+            } else {
+              this.logs.push({ file, before: fullBase64, type: 'error', desc: 'base64Util can not handle' });
             }
           }
 
